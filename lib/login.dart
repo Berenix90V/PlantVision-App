@@ -52,6 +52,7 @@ class LoginScreen extends StatelessWidget {
       userType: LoginUserType.name,
       onLogin: _authUser,
       onSignup: _signupUser,
+      userValidator: (data) => null,
       onSubmitAnimationCompleted: () {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (context) => const DashboardScreen(),
