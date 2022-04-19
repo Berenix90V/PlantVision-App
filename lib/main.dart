@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert' as convert;
+
+import 'login.dart';
 
 // DotEnv dotenv = DotEnv() is automatically called during import.
 // If you want to load multiple dotenv files or name your dotenv object differently, you can do the following and import the singleton into the relavant files:
@@ -10,6 +14,25 @@ Future main() async {
   // NOTE: fileName defaults to .env and can be omitted in this case.
   // Ensure that the filename corresponds to the path in step 1 and 2.
   await dotenv.load(fileName: ".env");
+
+
+  // TODO: change the url from localhost to a better one
+  /*
+  var url =
+  Uri.http(dotenv.get('API_URL'), '/user/Silvio');
+
+  // Await the http get response, then decode the json-formatted response.
+  var response = await http.get(url);
+  if (response.statusCode == 200) {
+    var jsonResponse =
+    convert.jsonDecode(response.body) as Map<String, dynamic>;
+
+    print(jsonResponse["plants"]);
+  } else {
+    print('Request failed with status: ${response.statusCode}.');
+  }
+   */
+
   //...runapp
   runApp(const MyApp());
 }
@@ -20,6 +43,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -32,12 +56,14 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.green,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: LoginScreen(),
     );
   }
 }
+
+
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
