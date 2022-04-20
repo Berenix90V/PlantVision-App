@@ -1,7 +1,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
+import 'package:smart_plants_app/utils/BackendConnection.dart';
 import 'dashboard_screen.dart';
+import 'package:http/http.dart' as http;
 
 const users = const {
   'dribbble@gmail.com': '12345',
@@ -16,13 +18,21 @@ class LoginScreen extends StatelessWidget {
 
   Future<String?> _authUser(LoginData data) {
     debugPrint('Name: ${data.name}, Password: ${data.password}');
-    return Future.delayed(loginTime).then((_) {
+    return Future.delayed(loginTime).then((_) async {
+
+       http.Response response = await BackendConnection.checkLogin(data.name, data.password);
+      if(response.statusCode == 404){
+        return response.getField("message");
+      }
+      /*
       if (!users.containsKey(data.name)) {
         return 'User not exists';
       }
       if (users[data.name] != data.password) {
         return 'Password does not match';
       }
+
+       */
       return null;
     });
   }
