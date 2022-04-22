@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:smart_plants_app/plants/sensor/periodicSensorReader.dart';
 
-class DashboardScreen extends StatelessWidget {
-  const DashboardScreen({Key? key}) : super(key: key);
+class DashboardScreenSingle extends StatelessWidget {
+  const DashboardScreenSingle({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
-import 'package:smart_plants_app/utils/BackendConnection.dart';
-import 'dashboard_screen.dart';
 import 'package:http/http.dart' as http;
+import 'package:smart_plants_app/utils/BackendConnection.dart';
 
-
-import 'dashboardSingle.dart';
+import 'dashboard_screen.dart';
 
 const users = {
   'dribbble@gmail.com': '12345',
   'hunter@gmail.com': 'hunter',
   'Silvio': 'password',
 };
-
 
 /// Class to implement the login screen. It's the home of the application
 class LoginScreen extends StatelessWidget {

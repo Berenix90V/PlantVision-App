@@ -8,7 +8,7 @@ class Plant {
   /// A list of [SensorReading].
   ///
   /// The last one is pushed on top of the stack, and the whole history is kept to have the ability of displaying the various trends.
-  final Iterable<SensorReading> sensorReadings;
+  final Iterable<SensorReading> sensorReadings; // TODO: Add stack
 
   /// The type of the plant.
   final String type;

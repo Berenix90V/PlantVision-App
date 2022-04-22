@@ -25,7 +25,6 @@ class SensorReading {
   static Future<SensorReading> latestReading(
       String username, String plantName) {
     return BackendConnection.latestReading(username, plantName).then((reading) {
-      print(reading.body);
       return SensorReading._internal(
           reading.getField("airTemperature") * 1.0,
           reading.getField("airHumidity") * 1.0,
