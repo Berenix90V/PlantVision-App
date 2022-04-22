@@ -82,7 +82,9 @@ class DashboardScreen extends StatelessWidget {
               leading: const Icon(Icons.spa),
               title:Text(plants[index]["name"]),
               trailing: Text(plants[index]["location"]),
-              //onTap: PlantDashboardScreen(),
+
+              //onTap: ()=>PlantDashboardScreen(plant:plants[index]),
+
             );
           },
         ),
