@@ -5,11 +5,13 @@ import 'package:smart_plants_app/utils/BackendConnection.dart';
 import 'dashboard_screen.dart';
 import 'package:http/http.dart' as http;
 
-const users = const {
+
+const users = {
   'dribbble@gmail.com': '12345',
   'hunter@gmail.com': 'hunter',
   'Silvio': 'password',
 };
+
 
 /// Class to implement the login screen. It's the home of the application
 class LoginScreen extends StatelessWidget {
@@ -64,7 +66,7 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FlutterLogin(
-      title: 'SmartPlants',
+      title: 'PlantVisor',
       logo: const AssetImage('assets/images/plants_icon.png'),
       userType: LoginUserType.name,
       onLogin: _authUser,
