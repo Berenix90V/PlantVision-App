@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:smart_plants_app/plants/createPlantButton.dart';
 
 class DashboardScreen extends StatelessWidget {
-  const DashboardScreen({Key? key}) : super(key: key);
+  @required
+  final String username;
+  const DashboardScreen({Key? key, required this.username}) : super(key: key);
   //TODO: fix API of return user data from "Temeperature" to "Temperature"
   final Map<String, dynamic> userData = const {
-    "username": "cristian",
+    "username": "Cristian",
     "plants": [
       {
         "type": "Basel",
@@ -70,9 +73,11 @@ class DashboardScreen extends StatelessWidget {
         primarySwatch: Colors.green,
       ),
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text("Your Plants")
+        floatingActionButton: PlantAddButton(
+          username: username,
         ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+        appBar: AppBar(title: const Text("Your Plants")),
         // TODO: return them divided by location (different ListView builders)
         body: ListView.builder(
           itemCount: plants.length,
@@ -80,11 +85,10 @@ class DashboardScreen extends StatelessWidget {
             return ListTile(
               // TODO: try with custom icons
               leading: const Icon(Icons.spa),
-              title:Text(plants[index]["name"]),
+              title: Text(plants[index]["name"]),
               trailing: Text(plants[index]["location"]),
 
               //onTap: ()=>PlantDashboardScreen(plant:plants[index]),
-
             );
           },
         ),

@@ -12,8 +12,21 @@ const users = {
 };
 
 /// Class to implement the login screen. It's the home of the application
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  late String username;
+
+  @override
+  void initState() {
+    super.initState();
+    username = "";
+  }
 
   /// Establish a timeout parameter
   Duration get loginTime => const Duration(milliseconds: 2250);
@@ -28,6 +41,9 @@ class LoginScreen extends StatelessWidget {
       if (response.statusCode == 404) {
         return response.getField("message");
       }
+      setState(() {
+        username = data.name;
+      });
       return null;
     });
   }
@@ -72,7 +88,9 @@ class LoginScreen extends StatelessWidget {
       userValidator: (data) => null,
       onSubmitAnimationCompleted: () {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => const DashboardScreen(),
+          builder: (context) => DashboardScreen(
+            username: username,
+          ),
         ));
       },
       onRecoverPassword: _recoverPassword,

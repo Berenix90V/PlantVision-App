@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:http/http.dart';
 import 'package:smart_plants_app/utils/BackendConnection.dart';
 
@@ -8,7 +10,7 @@ class Plant {
   /// A list of [SensorReading].
   ///
   /// The last one is pushed on top of the stack, and the whole history is kept to have the ability of displaying the various trends.
-  final Iterable<SensorReading> sensorReadings; // TODO: Add stack
+  final List<SensorReading>? sensorReadings; // TODO: Add stack
 
   /// The type of the plant.
   final String type;
@@ -20,25 +22,27 @@ class Plant {
   final String? description;
 
   /// Constructs a new [Plant].
-  Plant._(this.sensorReadings, this.type, this.name, this.description);
+  Plant(this.type, this.name, this.description, {this.sensorReadings});
 
   /// Retrieves and constructs a [Plant] belonging to [username].
-  static Future<Plant> fetch(String username) {
-    return BackendConnection.getPlant(username).then((plant) => Plant._(
-        plant.getField("sensor"),
-        plant.getField("type"),
-        plant.getField("name"),
-        plant.getField("description")));
+  static Future<Plant> fetch(String username, String plantName) {
+    return BackendConnection.getPlant(username, plantName).then((plant) =>
+        Plant(plant.getField("plantType"), plant.getField("name"),
+            plant.getField("description"),
+            sensorReadings: []));
   }
 
+  /// Returns the JSON representation of this plant
   Map<String, dynamic> get json => {
         "name": name,
         "type": type,
         "description": description,
       };
 
-  void create(String owner) async {
-    Response response = await BackendConnection.createPlant(owner, this);
-    if (response.statusCode != 201) {}
+  /// Adds this plant into the database
+  ///
+  /// Returns an HTTP Response which contains if the insertion was successful or not
+  Future<Response> create(String owner) async {
+    return await BackendConnection.createPlant(owner, this);
   }
 }
