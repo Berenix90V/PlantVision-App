@@ -25,8 +25,8 @@ class Plant {
   Plant(this.type, this.name, this.description, {this.sensorReadings});
 
   /// Retrieves and constructs a [Plant] belonging to [username].
-  static Future<Plant> fetch(String username, String plantName) {
-    return BackendConnection.getPlant(username, plantName).then((plant) =>
+  static Future<Plant> fetch(String username, String plantName, String hub) {
+    return BackendConnection.getPlant(username, plantName, hub).then((plant) =>
         Plant(plant.getField("plantType"), plant.getField("name"),
             plant.getField("description"),
             sensorReadings: []));

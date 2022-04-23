@@ -75,20 +75,19 @@ class BackendConnection {
   /// To know the response refer to the backend API documentation.
   /// Throws [NotFoundException] when the user is not found, or the passwords don't match
   static Future<http.Response> latestReading(
-      String username, String plantName) async {
-    String readingRoute = "/sensor/$username/$plantName";
+      String username, String plantName, String hub) async {
+    String readingRoute = "/sensor/$username/$hub/$plantName";
     return await _handleGetExceptions(readingRoute,
         queryParameters: {"latest": "true"});
   }
 
   /// Given a [username] returns a response of type [Future<Response>].
   ///
-  /// It requests all plants from [username]
   /// To know the response refer to the backend API documentation.
   /// Throws [NotFoundException] when the plant is not found
   static Future<http.Response> getPlant(
-      String username, String plantName) async {
-    String plantRoute = "/plant/$username/$plantName";
+      String username, String plantName, String hub) async {
+    String plantRoute = "/hub/$username/$hub/$plantName";
     return await _handleGetExceptions(plantRoute);
   }
 
@@ -103,6 +102,13 @@ class BackendConnection {
     String body = convert.jsonEncode(plant.json);
     print(body);
     return await _handlePostExceptions(route, body);
+  }
+
+  /// Returns user's plants divided per hub
+  static Future<http.Response> getUserHubs(
+      String username) async {
+    String userPlantsRoute = "/hubs/$username";
+    return await _handleGetExceptions(userPlantsRoute);
   }
 }
 

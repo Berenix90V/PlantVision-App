@@ -21,10 +21,14 @@ class SensorReading {
   SensorReading._internal(this.airTemperature, this.airHumidity,
       this.soilMoisture, this.lightIntensity);
 
+  ///public constructor
+  SensorReading({required this.airTemperature, required this.airHumidity,
+      required this.soilMoisture, required this.lightIntensity});
+
   /// Retrieves the latest reading from the database for [plantName] owned by [username] and creates a new [SensorReading].
   static Future<SensorReading> latestReading(
-      String username, String plantName) {
-    return BackendConnection.latestReading(username, plantName).then((reading) {
+      String username, String plantName, String hub) {
+    return BackendConnection.latestReading(username, plantName, hub).then((reading) {
       return SensorReading._internal(
           reading.getField("airTemperature") * 1.0,
           reading.getField("airHumidity") * 1.0,

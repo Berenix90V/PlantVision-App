@@ -16,9 +16,11 @@ class DashboardScreenSingle extends StatelessWidget {
   /// The name of the plant
   @required
   final String plantName;
+  @required
+  final String hub;
 
   const DashboardScreenSingle(
-      {Key? key, required this.username, required this.plantName})
+      {Key? key, required this.username, required this.plantName, required this.hub})
       : super(key: key);
 
   @override
@@ -38,7 +40,7 @@ class DashboardScreenSingle extends StatelessWidget {
           padding: const EdgeInsets.all(10.0),
           child: Center(
               child: FutureObserver<Plant>(
-            future: Plant.fetch(username, plantName),
+            future: Plant.fetch(username, plantName, hub),
             onSuccess: (Plant plant) => Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -80,7 +82,7 @@ class DashboardScreenSingle extends StatelessWidget {
                         padding: EdgeInsets.symmetric(vertical: 40)),
                 Expanded(
                     child: PeriodicSensorReader(
-                        username: username, plantName: plantName))
+                        username: username, plantName: plantName, hub: hub,))
               ],
             ),
             onError: (error) => Center(child: Text(error.toString())),

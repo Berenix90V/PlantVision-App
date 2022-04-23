@@ -14,8 +14,11 @@ class PeriodicSensorReader extends StatefulWidget {
   @required
   final String plantName;
 
+  @required
+  final String hub;
+
   const PeriodicSensorReader(
-      {Key? key, required this.username, required this.plantName})
+      {Key? key, required this.username, required this.plantName, required this.hub})
       : super(key: key);
 
   @override
@@ -29,12 +32,12 @@ class _PeriodicSensorReaderState extends State<PeriodicSensorReader> {
   void initState() {
     super.initState();
     _latestReading =
-        SensorReading.latestReading(widget.username, widget.plantName);
+        SensorReading.latestReading(widget.username, widget.plantName, widget.hub);
     Timer.periodic(
         const Duration(seconds: 5),
         (Timer t) => setState(() {
               _latestReading = SensorReading.latestReading(
-                  widget.username, widget.plantName);
+                  widget.username, widget.plantName, widget.hub);
             }));
   }
 

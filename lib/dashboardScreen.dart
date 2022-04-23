@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:smart_plants_app/plants/createPlantButton.dart';
 
+import 'models/Hub.dart';
+import 'models/User.dart';
+
 class DashboardScreen extends StatelessWidget {
   @required
   final String username;
   const DashboardScreen({Key? key, required this.username}) : super(key: key);
-  //TODO: fix API of return user data from "Temeperature" to "Temperature"
+  @required
+  //final Map<String, dynamic> userData =
+  //TODO: fix API documentation of return user data from "Temeperature" to "Temperature"
+
   final Map<String, dynamic> userData = const {
     "username": "Cristian",
     "plants": [
@@ -54,10 +60,12 @@ class DashboardScreen extends StatelessWidget {
     ]
   };
 
+
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement a class Plant in models
-    List<Map<String, dynamic>> plants = userData["plants"];
+    Future<List<Hub>> hubs = User.userHubs(username);
     return MaterialApp(
       title: 'Your Plants',
       theme: ThemeData(
@@ -79,19 +87,19 @@ class DashboardScreen extends StatelessWidget {
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         appBar: AppBar(title: const Text("Your Plants")),
         // TODO: return them divided by location (different ListView builders)
-        body: ListView.builder(
-          itemCount: plants.length,
+        body: Container()/*ListView.builder(
+          itemCount: hubs.length,
           itemBuilder: (BuildContext context, int index) {
             return ListTile(
               // TODO: try with custom icons
               leading: const Icon(Icons.spa),
-              title: Text(plants[index]["name"]),
-              trailing: Text(plants[index]["location"]),
+              title: Text(hubs[index].name),
+              trailing: Text(hubs[index].location),
 
               //onTap: ()=>PlantDashboardScreen(plant:plants[index]),
             );
           },
-        ),
+        ),*/
       ),
     );
   }

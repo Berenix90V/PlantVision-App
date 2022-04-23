@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
 import 'package:http/http.dart' as http;
+import 'package:smart_plants_app/dashboardSingle.dart';
 import 'package:smart_plants_app/utils/BackendConnection.dart';
 
-import 'dashboard_screen.dart';
+import 'dashboardScreen.dart';
 
 const users = {
   'dribbble@gmail.com': '12345',
