@@ -1,106 +1,59 @@
 import 'package:flutter/material.dart';
 import 'package:smart_plants_app/plants/createPlantButton.dart';
 
+import 'dashboardPlants.dart';
 import 'models/Hub.dart';
+import 'models/Plant.dart';
 import 'models/User.dart';
 
+/// Dashboard of all hubs for a user
 class DashboardScreen extends StatelessWidget {
   @required
   final String username;
   const DashboardScreen({Key? key, required this.username}) : super(key: key);
-  @required
-  //final Map<String, dynamic> userData =
+
   //TODO: fix API documentation of return user data from "Temeperature" to "Temperature"
-
-  final Map<String, dynamic> userData = const {
-    "username": "Cristian",
-    "plants": [
-      {
-        "type": "Basel",
-        "name": "Basel",
-        "location": "Kitchen",
-        "description": "Basel plant in the kitchen",
-        "sensor": [
-          {
-            "airTemperature": 24.2,
-            "airHumidity": 85,
-            "soilMoisture": 44.45,
-            "lightIntensity": 90
-          }
-        ]
-      },
-      {
-        "type": "Parsley",
-        "name": "Parsley",
-        "location": "Kitchen",
-        "description": "Parsley plant in the kitchen",
-        "sensor": [
-          {
-            "airTemperature": 24.2,
-            "airHumidity": 85,
-            "soilMoisture": 44.45,
-            "lightIntensity": 90
-          }
-        ]
-      },
-      {
-        "type": "Parsley",
-        "name": "Parsley",
-        "location": "LivingRoom",
-        "description": "Parsley plant in the kitchen",
-        "sensor": [
-          {
-            "airTemperature": 24.2,
-            "airHumidity": 85,
-            "soilMoisture": 44.45,
-            "lightIntensity": 90
-          }
-        ]
-      }
-    ]
-  };
-
-
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement a class Plant in models
-    Future<List<Hub>> hubs = User.userHubs(username);
-    return MaterialApp(
-      title: 'Your Plants',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.green,
-      ),
-      home: Scaffold(
-        floatingActionButton: PlantAddButton(
-          username: username,
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        appBar: AppBar(title: const Text("Your Plants")),
-        // TODO: return them divided by location (different ListView builders)
-        body: Container()/*ListView.builder(
-          itemCount: hubs.length,
-          itemBuilder: (BuildContext context, int index) {
-            return ListTile(
-              // TODO: try with custom icons
-              leading: const Icon(Icons.spa),
-              title: Text(hubs[index].name),
-              trailing: Text(hubs[index].location),
+    Future <List<Hub>> hubs = User.userHubs(username);
 
-              //onTap: ()=>PlantDashboardScreen(plant:plants[index]),
-            );
-          },
-        ),*/
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Your Plants'),
       ),
+      // builds list of hubs
+      body: FutureBuilder<List<Hub>>(
+        future: hubs,
+        builder: (context, AsyncSnapshot<List<Hub>> snapshot) {
+          if (snapshot.hasData && snapshot.data != null) {
+            return ListView.builder(
+                itemCount: snapshot.data!.length,
+                itemBuilder: (context, index){
+                  if(snapshot.data!.elementAt(index) != null){
+                    List<Plant>? hubPlants = snapshot.data!.elementAt(index).plants;
+                    return ListTile(
+                      // TODO: try with custom icons
+                      leading: const Icon(Icons.hub),
+                      title: Text(snapshot.data!.elementAt(index).name),
+                      trailing: Text(snapshot.data!.elementAt(index).location),
+                      onTap: ()=>
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      DashboardPlants(hubname: snapshot.data!.elementAt(index).name, username: username,))),
+                    );
+                  } else {
+                    return const Text("Empty hub");
+                  }
+
+                });
+          } else {
+            return const Text("Error") ;
+          }
+        }
+      )
     );
   }
 }

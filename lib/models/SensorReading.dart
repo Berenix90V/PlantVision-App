@@ -26,9 +26,10 @@ class SensorReading {
       required this.soilMoisture, required this.lightIntensity});
 
   /// Retrieves the latest reading from the database for [plantName] owned by [username] and creates a new [SensorReading].
-  static Future<SensorReading> latestReading(
+  static Future<SensorReading?> latestReading(
       String username, String plantName, String hub) {
     return BackendConnection.latestReading(username, plantName, hub).then((reading) {
+      if(reading.body.isEmpty) return null;
       return SensorReading._internal(
           reading.getField("airTemperature") * 1.0,
           reading.getField("airHumidity") * 1.0,
@@ -38,7 +39,7 @@ class SensorReading {
   }
 
   Widget _displayMeasurement(
-      double measurement, String measurementName, IconData icon) {
+      double measurement, String measurementName, IconData icon, {Color color = Colors.black }) {
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -47,6 +48,7 @@ class SensorReading {
             margin: const EdgeInsets.only(bottom: 10),
             child: Icon(
               icon,
+              color: color,
               size: 48,
             ),
           ),
@@ -70,11 +72,11 @@ class SensorReading {
         mainAxisSpacing: 10,
         children: [
           _displayMeasurement(
-              airTemperature, "Temperature", Icons.whatshot_outlined),
-          _displayMeasurement(airHumidity, "Humidity", Icons.percent_outlined),
+              airTemperature, "Temperature", Icons.whatshot_outlined, color:Colors.orange),
+          _displayMeasurement(airHumidity, "Humidity", Icons.percent_outlined, color: Colors.blue),
           _displayMeasurement(
-              soilMoisture, "Moisture", Icons.water_drop_outlined),
-          _displayMeasurement(lightIntensity, "Light", Icons.wb_sunny_outlined),
+              soilMoisture, "Moisture", Icons.water_drop_outlined, color: Colors.brown.shade400),
+          _displayMeasurement(lightIntensity, "Light", Icons.wb_sunny_outlined, color: Colors.yellow.shade700),
         ],
       );
 }

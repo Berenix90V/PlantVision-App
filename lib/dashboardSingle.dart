@@ -45,7 +45,7 @@ class DashboardScreenSingle extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Row(
+                Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
@@ -81,8 +81,9 @@ class DashboardScreenSingle extends StatelessWidget {
                     : const Padding(
                         padding: EdgeInsets.symmetric(vertical: 40)),
                 Expanded(
-                    child: PeriodicSensorReader(
-                        username: username, plantName: plantName, hub: hub,))
+                    child:
+                    PeriodicSensorReader(
+                      username: username, plantName: plantName, hub: hub,))
               ],
             ),
             onError: (error) => Center(child: Text(error.toString())),

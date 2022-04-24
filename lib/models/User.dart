@@ -32,7 +32,6 @@ class User {
       };
 
   static Future<List<Hub>> userHubs (String username) async {
-    // TODO: Refactor di questo schifo
     return await BackendConnection.getUserHubs(username).then((response) => (jsonDecode(response.body) as List<dynamic>).map((e)
     {
       List<Plant> myplants = (e["plants"] as List<dynamic>).map((p)

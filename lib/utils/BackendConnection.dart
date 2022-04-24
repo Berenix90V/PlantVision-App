@@ -69,6 +69,17 @@ class BackendConnection {
     return await _handlePostExceptions(loginRoute, body);
   }
 
+  /// Given a [username] and a [hub] it returns a list of plants
+  ///
+  /// It submits a get request to the backend route "/hub/[username]/[hub]" to get the list of plants in the hub
+  /// To know the response refer to the backend API documentation.
+  /// Throws [NotFoundException] when the user is not found, or the hub don't match
+  static Future<http.Response> getHubPlants(
+      String username, String hub) async {
+    String plantRoute = "/hub/$username/$hub";
+    return await _handleGetExceptions(plantRoute);
+  }
+
   ///Given a [username] and a [plantName] it returns a response of type Future<Response> (library: http/http.dart).
   ///
   /// It submits a get request to the backend route "/sensor/[username]/[plantName]" to get the latest sensor reading
@@ -117,12 +128,16 @@ extension GetFields on http.Response {
   /// Fetches a particular [field] from the response body
   ///
   /// Throws [NotFoundException] when [field] is not present in the body
-  dynamic getField(String field) {
+  dynamic getField(String field, {bool required = true}) {
     var jsonResponse = convert.jsonDecode(body) as Map<String, dynamic>;
     if (jsonResponse.containsKey(field)) {
       return jsonResponse[field];
     } else {
-      throw NotFoundException("Field $field doesn't exist");
+      if (required) {
+        throw NotFoundException("Field $field doesn't exist");
+      } else {
+        return null;
+      }
     }
   }
 }

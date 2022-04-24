@@ -28,7 +28,7 @@ class Plant {
   static Future<Plant> fetch(String username, String plantName, String hub) {
     return BackendConnection.getPlant(username, plantName, hub).then((plant) =>
         Plant(plant.getField("plantType"), plant.getField("name"),
-            plant.getField("description"),
+            plant.getField("description", required: false),
             sensorReadings: []));
   }
 

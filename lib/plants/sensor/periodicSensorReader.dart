@@ -26,27 +26,35 @@ class PeriodicSensorReader extends StatefulWidget {
 }
 
 class _PeriodicSensorReaderState extends State<PeriodicSensorReader> {
-  late Future<SensorReading> _latestReading;
+  late Future<SensorReading?> _latestReading;
+
+  @override
+  void setState(VoidCallback fn) {
+    if(mounted) {
+      super.setState(fn);
+    }
+  }
 
   @override
   void initState() {
     super.initState();
     _latestReading =
         SensorReading.latestReading(widget.username, widget.plantName, widget.hub);
-    Timer.periodic(
+      Timer.periodic(
         const Duration(seconds: 5),
-        (Timer t) => setState(() {
-              _latestReading = SensorReading.latestReading(
-                  widget.username, widget.plantName, widget.hub);
-            }));
+            (Timer t) => setState(() {
+          _latestReading = SensorReading.latestReading(
+              widget.username, widget.plantName, widget.hub);
+        }));
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureObserver<SensorReading>(
+    return FutureObserver<SensorReading?>(
       future: _latestReading,
-      onSuccess: (SensorReading reading) => reading.measurements,
+      onSuccess: (SensorReading? reading) => reading!.measurements,
       onError: (Object? e) => Text((e as Error).toString()),
+      onWaiting: () => const Center(child: Text("No readings found"),),
     );
   }
 }

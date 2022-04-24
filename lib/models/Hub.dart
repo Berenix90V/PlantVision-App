@@ -1,6 +1,9 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:smart_plants_app/models/Plant.dart';
+
+import '../utils/BackendConnection.dart';
 
 
 /// Defines a plant.
@@ -30,6 +33,14 @@ class Hub {
     "free_slots": plants==null? slots: slots - plants!.length,
     "plants" : plants
   };
+
+  static Future<List<Plant?>> hubPlants (String username, String hubname) async {
+    return await BackendConnection.getHubPlants(username, hubname).then((response) => (jsonDecode(response.body) as List<dynamic>).map((e)
+    {
+      return e == null ? null : Plant(e["type"], e["name"], e["description"]);
+    }).toList());
+  }
+
 
   @override
   String toString() {
