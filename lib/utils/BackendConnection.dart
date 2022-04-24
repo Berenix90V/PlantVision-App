@@ -5,6 +5,8 @@ import 'package:http/http.dart' as http;
 import 'package:smart_plants_app/errors/exceptions.dart';
 import 'package:smart_plants_app/models/Plant.dart';
 
+import '../models/Hub.dart';
+
 /// Class to manage http requests to the backend
 class BackendConnection {
   /// Given a [route] of type String, it returns the response of type Future<Response> (library: http/http.dart) to a get http request
@@ -108,8 +110,8 @@ class BackendConnection {
   /// To know the response refer to the API documentation.
   /// Throws [NotFoundException] when the route or resource are not found
   /// Throws [ConflictException] when the resource is conflicting with existing resources
-  static Future<http.Response> createPlant(String username, Plant plant) async {
-    String route = "/plant/$username";
+  static Future<http.Response> createPlant(String username, String hubname, Plant plant) async {
+    String route = "/hub/$username/$hubname";
     String body = convert.jsonEncode(plant.json);
     print(body);
     return await _handlePostExceptions(route, body);
@@ -120,6 +122,19 @@ class BackendConnection {
       String username) async {
     String userPlantsRoute = "/hubs/$username";
     return await _handleGetExceptions(userPlantsRoute);
+  }
+
+  /// Given a [username]  it returns a response of type Future<Response> (library: http/http.dart).
+  ///
+  /// It submits a post request to the backend route "/user/[username]" to create a new hub.
+  /// To know the response refer to the API documentation.
+  /// Throws [NotFoundException] when the route or resource are not found
+  /// Throws [ConflictException] when the resource is conflicting with existing resources
+  static Future<http.Response> createHub(String username, Hub hub) async {
+    String route = "/user/$username";
+    String body = convert.jsonEncode(hub.json);
+    print(body);
+    return await _handlePostExceptions(route, body);
   }
 }
 

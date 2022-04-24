@@ -6,22 +6,36 @@ import 'models/Hub.dart';
 import 'models/Plant.dart';
 import 'models/User.dart';
 
-class DashboardPlants extends StatelessWidget {
+class DashboardPlants extends StatefulWidget {
   @required
   final String username;
 
   @required
   final String hubname;
-  const DashboardPlants({Key? key, required this.username, required this.hubname}) : super(key: key);
 
+  @required
+  final int freeSlots;
+
+  const DashboardPlants({Key? key, required this.username, required this.hubname, required this.freeSlots}) : super(key: key);
+
+  @override
+  State<DashboardPlants> createState() => _DashboardPlantsState();
+}
+
+class _DashboardPlantsState extends State<DashboardPlants> {
+  late final Future <List<Plant?>> plants;
+
+  @override
+  initState() {
+    super.initState();
+    plants = Hub.hubPlants(widget.username, widget.hubname);
+  }
 
   @override
   Widget build(BuildContext context) {
-    Future <List<Plant?>> plants = Hub.hubPlants(username, hubname);
-
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Your Hubs'),
+          title: const Text('Your Plants'),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
@@ -29,6 +43,9 @@ class DashboardPlants extends StatelessWidget {
             },
           ),
         ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+        floatingActionButton: widget.freeSlots!=0? PlantAddButton(username: widget.username, hubname: widget.hubname,): null,
+        //TODO REFACTOR DEL FUTURE BUILDER eccezione null check
         body: FutureBuilder<List<Plant?>>(
             future: plants,
             builder: (context, AsyncSnapshot<List<Plant?>> snapshot) {
@@ -47,7 +64,7 @@ class DashboardPlants extends StatelessWidget {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          DashboardScreenSingle(plantName: snapshot.data!.elementAt(index)!.name, username: username, hub: hubname))),
+                                          DashboardScreenSingle(plantName: snapshot.data!.elementAt(index)!.name, username: widget.username, hub: widget.hubname))),
                         );
                       } else {
                         return Container();
@@ -55,7 +72,7 @@ class DashboardPlants extends StatelessWidget {
 
                     });
               } else {
-                return const Text("Error") ;
+                return Text((snapshot.error as TypeError?)?.stackTrace.toString() ?? "NULL") ;
               }
             }
         )

@@ -1,32 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:smart_plants_app/plants/textField.dart';
 import 'package:smart_plants_app/utils/BackendConnection.dart';
 
-import '../models/Plant.dart';
+import '../models/Hub.dart';
 
-/// A form that allows to create and insert a new [Plant] into the database
-class PlantCreator extends StatefulWidget {
-  /// The username of the user whose plant will be assigned
+class HubCreator extends StatefulWidget {
   @required
   final String username;
-  final String hubname;
-
-  const PlantCreator({Key? key, required this.username, required this.hubname}) : super(key: key);
+  const HubCreator({Key? key, required this.username}) : super(key: key);
 
   @override
-  State<PlantCreator> createState() => _PlantCreatorState();
+  State<HubCreator> createState() => _HubCreatorState();
 }
 
-class _PlantCreatorState extends State<PlantCreator> {
+class _HubCreatorState extends State<HubCreator> {
   final TextEditingController nameController = TextEditingController();
-  final TextEditingController typeController = TextEditingController();
-  final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController locationController = TextEditingController();
+  final TextEditingController slotsController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Add a new plant"),
+        title: const Text("Add a new hub"),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
@@ -42,44 +39,47 @@ class _PlantCreatorState extends State<PlantCreator> {
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
-                PlantCreatorTextField(
+                HubCreatorTextField(
                   controller: nameController,
                   label: "Name",
                   validation: (value) => value == null || value.isEmpty
                       ? "Name cannot be empty"
                       : null,
                 ),
-                PlantCreatorTextField(
-                  controller: typeController,
-                  label: "Type",
+                HubCreatorTextField(
+                  controller: locationController,
+                  label: "Location",
                   validation: (value) => value == null || value.isEmpty
-                      ? "Type cannot be empty"
+                      ? "Location cannot be empty"
                       : null,
                 ),
-                PlantCreatorTextField(
-                  controller: descriptionController,
-                  label: "Description",
-                  validation: (value) => null,
-                  minLines: 3,
-                  maxLines: 5,
+                HubCreatorTextField(
+                  controller: slotsController,
+                  label: "Number of slots",
+                  isInteger: true,
+                  validation: (value) => value == null || value.isEmpty
+                      ? "Number of slots cannot be empty"
+                      : null,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 25),
                   child: ElevatedButton(
                     onPressed: () async {
-                      final response = await Plant(typeController.text,
-                              nameController.text, descriptionController.text)
-                          .create(widget.username, widget.hubname);
+                      final response = await Hub(nameController.text,
+                          locationController.text, int.parse(slotsController.text), null)
+                          .create(widget.username);
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: Text(response.getField("message"))));
                     },
-                    child: const Text("Create plant"),
+                    child: const Text("Create hub"),
                   ),
                 )
               ],
             ),
-          ),
-        ),
+
+          )
+
+        )
       ),
     );
   }

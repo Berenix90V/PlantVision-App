@@ -35,14 +35,14 @@ class Plant {
   /// Returns the JSON representation of this plant
   Map<String, dynamic> get json => {
         "name": name,
-        "type": type,
+        "plantType": type,
         "description": description,
       };
 
   /// Adds this plant into the database
   ///
   /// Returns an HTTP Response which contains if the insertion was successful or not
-  Future<Response> create(String owner) async {
-    return await BackendConnection.createPlant(owner, this);
+  Future<Response> create(String owner, String hubname) async {
+    return await BackendConnection.createPlant(owner, hubname, this);
   }
 }

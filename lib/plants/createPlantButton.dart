@@ -5,7 +5,8 @@ import 'package:smart_plants_app/plants/plantCreator.dart';
 class PlantAddButton extends StatefulWidget {
   @required
   final String username;
-  const PlantAddButton({Key? key, required this.username}) : super(key: key);
+  final String hubname;
+  const PlantAddButton({Key? key, required this.username, required this.hubname}) : super(key: key);
 
   @override
   State<PlantAddButton> createState() => _PlantAddButtonState();
@@ -20,6 +21,7 @@ class _PlantAddButtonState extends State<PlantAddButton> {
             MaterialPageRoute(
                 builder: (context) => PlantCreator(
                       username: widget.username,
+                      hubname: widget.hubname
                     ))),
         label: const Text("Create"),
         backgroundColor: Colors.green,

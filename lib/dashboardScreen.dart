@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smart_plants_app/plants/createPlantButton.dart';
 
 import 'dashboardPlants.dart';
+import 'hubs/createHubButton.dart';
 import 'models/Hub.dart';
 import 'models/Plant.dart';
 import 'models/User.dart';
@@ -20,37 +21,41 @@ class DashboardScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Your Plants'),
+        title: const Text('Your Hubs'),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: HubAddButton(username: username),
       // builds list of hubs
+        //TODO REFACTOR DEL FUTURE BUILDER eccezione null check
       body: FutureBuilder<List<Hub>>(
         future: hubs,
-        builder: (context, AsyncSnapshot<List<Hub>> snapshot) {
+        builder: (context, AsyncSnapshot<List<Hub?>> snapshot) {
           if (snapshot.hasData && snapshot.data != null) {
             return ListView.builder(
                 itemCount: snapshot.data!.length,
                 itemBuilder: (context, index){
                   if(snapshot.data!.elementAt(index) != null){
-                    List<Plant>? hubPlants = snapshot.data!.elementAt(index).plants;
+                    Hub? hub = snapshot.data!.elementAt(index)!;
+                    int freeSlots = Hub.freeSlots(hub.slots, hub.plants!);
                     return ListTile(
                       // TODO: try with custom icons
-                      leading: const Icon(Icons.hub),
-                      title: Text(snapshot.data!.elementAt(index).name),
-                      trailing: Text(snapshot.data!.elementAt(index).location),
+                      leading: const Icon(Icons.hub, color: Colors.green),
+                      title: Text(hub.name),
+                      subtitle: Text(hub.location),
+                      trailing: freeSlots !=0? const Icon(Icons.spa, color: Colors.green): const Icon(Icons.spa),
                       onTap: ()=>
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      DashboardPlants(hubname: snapshot.data!.elementAt(index).name, username: username,))),
+                                      DashboardPlants(hubname: hub.name, username: username, freeSlots: freeSlots))),
                     );
                   } else {
                     return const Text("Empty hub");
                   }
-
                 });
           } else {
-            return const Text("Error") ;
+            return Text((snapshot.error! as TypeError).stackTrace.toString()) ;
           }
         }
       )
