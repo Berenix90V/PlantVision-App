@@ -71,13 +71,26 @@ class BackendConnection {
     return await _handlePostExceptions(loginRoute, body);
   }
 
+  /// Given a [username] and a [password] it returns a response of type Future<Response> (library: http/http.dart).
+  ///
+  /// It submits a post request to the backend route "/user" insert a new user.
+  /// To know the response refer to the API documentation.
+  /// Throws [NotFoundException] when the route or resource are not found
+  /// Throws [ConflictException] when the resource is conflicting with existing resources
+  static Future<http.Response> createUser(
+      String username, String password) async {
+    String registerRoute = "/user";
+    String body =
+        convert.jsonEncode({"username": username, "password": password});
+    return await _handlePostExceptions(registerRoute, body);
+  }
+
   /// Given a [username] and a [hub] it returns a list of plants
   ///
   /// It submits a get request to the backend route "/hub/[username]/[hub]" to get the list of plants in the hub
   /// To know the response refer to the backend API documentation.
   /// Throws [NotFoundException] when the user is not found, or the hub don't match
-  static Future<http.Response> getHubPlants(
-      String username, String hub) async {
+  static Future<http.Response> getHubPlants(String username, String hub) async {
     String plantRoute = "/hub/$username/$hub";
     return await _handleGetExceptions(plantRoute);
   }
@@ -110,7 +123,8 @@ class BackendConnection {
   /// To know the response refer to the API documentation.
   /// Throws [NotFoundException] when the route or resource are not found
   /// Throws [ConflictException] when the resource is conflicting with existing resources
-  static Future<http.Response> createPlant(String username, String hubname, Plant plant) async {
+  static Future<http.Response> createPlant(
+      String username, String hubname, Plant plant) async {
     String route = "/hub/$username/$hubname";
     String body = convert.jsonEncode(plant.json);
     print(body);
@@ -118,8 +132,7 @@ class BackendConnection {
   }
 
   /// Returns user's plants divided per hub
-  static Future<http.Response> getUserHubs(
-      String username) async {
+  static Future<http.Response> getUserHubs(String username) async {
     String userPlantsRoute = "/hubs/$username";
     return await _handleGetExceptions(userPlantsRoute);
   }

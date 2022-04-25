@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:smart_plants_app/dashboardSingle.dart';
 import 'package:smart_plants_app/plants/createPlantButton.dart';
+import 'package:smart_plants_app/utils/FutureObserver.dart';
 
 import 'models/Hub.dart';
 import 'models/Plant.dart';
-import 'models/User.dart';
 
 class DashboardPlants extends StatefulWidget {
   @required
@@ -16,14 +16,19 @@ class DashboardPlants extends StatefulWidget {
   @required
   final int freeSlots;
 
-  const DashboardPlants({Key? key, required this.username, required this.hubname, required this.freeSlots}) : super(key: key);
+  const DashboardPlants(
+      {Key? key,
+      required this.username,
+      required this.hubname,
+      required this.freeSlots})
+      : super(key: key);
 
   @override
   State<DashboardPlants> createState() => _DashboardPlantsState();
 }
 
 class _DashboardPlantsState extends State<DashboardPlants> {
-  late final Future <List<Plant?>> plants;
+  late final Future<List<Plant?>> plants;
 
   @override
   initState() {
@@ -44,38 +49,41 @@ class _DashboardPlantsState extends State<DashboardPlants> {
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        floatingActionButton: widget.freeSlots!=0? PlantAddButton(username: widget.username, hubname: widget.hubname,): null,
-        //TODO REFACTOR DEL FUTURE BUILDER eccezione null check
-        body: FutureBuilder<List<Plant?>>(
-            future: plants,
-            builder: (context, AsyncSnapshot<List<Plant?>> snapshot) {
-              if (snapshot.hasData && snapshot.data != null) {
-                return ListView.builder(
-                    itemCount: snapshot.data!.length,
-                    itemBuilder: (context, index){
-                      if(snapshot.data!.elementAt(index) != null){
-                        return ListTile(
-                          // TODO: try with custom icons
-                          leading: const Icon(Icons.spa, color: Colors.green),
-                          title: Text(snapshot.data!.elementAt(index)!.name),
-                          subtitle: Text(snapshot.data!.elementAt(index)!.type),
-                          onTap: ()=>
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          DashboardScreenSingle(plantName: snapshot.data!.elementAt(index)!.name, username: widget.username, hub: widget.hubname))),
-                        );
-                      } else {
-                        return Container();
-                      }
-
-                    });
-              } else {
-                return Text((snapshot.error as TypeError?)?.stackTrace.toString() ?? "NULL") ;
-              }
-            }
-        )
-    );
+        floatingActionButton: widget.freeSlots != 0
+            ? PlantAddButton(
+                username: widget.username,
+                hubname: widget.hubname,
+              )
+            : null,
+        body: FutureObserver<List<Plant?>>(
+          future: plants,
+          onSuccess: (List<Plant?> ps) {
+            Iterable<Plant?> existingPlants = ps.where((p) => p != null);
+            return ListView.builder(
+                itemCount: existingPlants.length,
+                itemBuilder: (context, index) {
+                  Plant? plant = existingPlants.elementAt(index);
+                  if (plant != null) {
+                    return ListTile(
+                      // TODO: try with custom icons
+                      leading: const Icon(Icons.spa, color: Colors.green),
+                      title: Text(plant.name),
+                      subtitle: Text(plant.type),
+                      onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => DashboardScreenSingle(
+                                  plantName: plant.name,
+                                  username: widget.username,
+                                  hub: widget.hubname),
+                              maintainState: false)),
+                    );
+                  } else {
+                    return Container();
+                  }
+                });
+          },
+          onError: (error) => const Center(child: Text("An error occurred")),
+        ));
   }
 }

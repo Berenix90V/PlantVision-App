@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
 import 'package:http/http.dart' as http;
-import 'package:smart_plants_app/dashboardSingle.dart';
 import 'package:smart_plants_app/utils/BackendConnection.dart';
 
 import 'dashboardScreen.dart';
@@ -50,10 +49,17 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   /// Given a [data.name] and a [data.password] it register the new user
-  /// TODO: implement the signup function
   Future<String?> _signupUser(SignupData data) {
     debugPrint('Signup Name: ${data.name}, Password: ${data.password}');
-    return Future.delayed(loginTime).then((_) {
+    return Future.delayed(loginTime).then((_) async {
+      http.Response response =
+          await BackendConnection.createUser(data.name!, data.password!);
+      if (response.statusCode == 409) {
+        return response.getField("message");
+      }
+      setState(() {
+        username = data.name!;
+      });
       return null;
     });
   }
@@ -89,9 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
       userValidator: (data) => null,
       onSubmitAnimationCompleted: () {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => DashboardScreen(
-            username: username,
-          ),
+          builder: (context) => DashboardScreen(username: username),
         ));
       },
       onRecoverPassword: _recoverPassword,
