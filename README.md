@@ -1,4 +1,4 @@
-# smart_plants_app
+# PlantVisor
 
 App for smart plants
 
