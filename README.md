@@ -2,15 +2,9 @@
 
 App for smart plants
 
-## Getting Started
+This repository contains all the code necessary to build and run the Android application, granted you open it in Android studio.
 
-This project is a starting point for a Flutter application.
+For the documentation, you can find it in the code itself.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+The main idea of the application is to be able to create a user, some hubs and some plants attached to those hubs.
+Each plant will be requesting data from the backend and will display the soil moisture, temperature, humidity and light intesity every 5 minutes.
