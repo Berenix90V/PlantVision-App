@@ -22,14 +22,18 @@ class SensorReading {
       this.soilMoisture, this.lightIntensity);
 
   ///public constructor
-  SensorReading({required this.airTemperature, required this.airHumidity,
-      required this.soilMoisture, required this.lightIntensity});
+  SensorReading(
+      {required this.airTemperature,
+      required this.airHumidity,
+      required this.soilMoisture,
+      required this.lightIntensity});
 
   /// Retrieves the latest reading from the database for [plantName] owned by [username] and creates a new [SensorReading].
   static Future<SensorReading?> latestReading(
       String username, String plantName, String hub) {
-    return BackendConnection.latestReading(username, plantName, hub).then((reading) {
-      if(reading.body.isEmpty) return null;
+    return BackendConnection.latestReading(username, plantName, hub)
+        .then((reading) {
+      if (reading.body.isEmpty) return null;
       return SensorReading._internal(
           reading.getField("airTemperature") * 1.0,
           reading.getField("airHumidity") * 1.0,
@@ -38,8 +42,10 @@ class SensorReading {
     });
   }
 
+  /// Displays a measurement the current sensor reading.
   Widget _displayMeasurement(
-      double measurement, String measurementName, IconData icon, {Color color = Colors.black }) {
+      double measurement, String measurementName, IconData icon,
+      {Color color = Colors.black}) {
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -65,6 +71,7 @@ class SensorReading {
     );
   }
 
+  // It returns a grid with all the sensor measurements neatly displayed.
   Widget get measurements => GridView.count(
         crossAxisCount: 2,
         crossAxisSpacing: 10,
@@ -72,11 +79,15 @@ class SensorReading {
         mainAxisSpacing: 10,
         children: [
           _displayMeasurement(
-              airTemperature, "Temperature", Icons.whatshot_outlined, color:Colors.orange),
-          _displayMeasurement(airHumidity, "Humidity", Icons.percent_outlined, color: Colors.blue),
+              airTemperature, "Temperature", Icons.whatshot_outlined,
+              color: Colors.orange),
+          _displayMeasurement(airHumidity, "Humidity", Icons.percent_outlined,
+              color: Colors.blue),
           _displayMeasurement(
-              soilMoisture, "Moisture", Icons.water_drop_outlined, color: Colors.brown.shade400),
-          _displayMeasurement(lightIntensity, "Light", Icons.wb_sunny_outlined, color: Colors.yellow.shade700),
+              soilMoisture, "Moisture", Icons.water_drop_outlined,
+              color: Colors.brown.shade400),
+          _displayMeasurement(lightIntensity, "Light", Icons.wb_sunny_outlined,
+              color: Colors.yellow.shade700),
         ],
       );
 }

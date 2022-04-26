@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
-/// Observer class with the goal of reacting to an asynchronous call.
+/// [FutureBuilder] class that observes a [Future<T>] and executes [onSuccess]
+/// when data has been received, [onError] when an error occurred or either [defaultOnWaiting]
+/// or a given [onWaiting] function when then future is yet to be completed
 class FutureObserver<T> extends StatelessWidget {
   /// The [Future] that will be observed
   final Future<T> future;
